@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -46,6 +48,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         officials.add(o3);
 
 //        oAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu m) {
+        getMenuInflater().inflate(R.menu.menu_main, m);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem i) {
+        switch (i.getItemId()) {
+            case R.id.menu_search:
+                mToast("search");
+                break;
+            case R.id.menu_about:
+                mToast("about");
+                break;
+        }
+
+        return super.onOptionsItemSelected(i);
     }
 
     @Override
