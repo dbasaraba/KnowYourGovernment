@@ -39,12 +39,7 @@ public class OfficialActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         website = findViewById(R.id.website);
 
-        if (Objects.equals(getIntent().getStringExtra("party"), "Democratic")) {
-            constraintLayout.setBackgroundColor(Color.BLUE);
-        }
-        else if (Objects.equals(getIntent().getStringExtra("party"), "Republican")) {
-            constraintLayout.setBackgroundColor(Color.RED);
-        }
+        setColor(getIntent().getStringExtra("party"));
 
         office.setText(getIntent().getStringExtra("office"));
         name.setText(getIntent().getStringExtra("name"));
@@ -60,6 +55,11 @@ public class OfficialActivity extends AppCompatActivity {
         phone.setText(getIntent().getStringExtra("phone"));
         email.setText(getIntent().getStringExtra("email"));
         website.setText(getIntent().getStringExtra("website"));
+    }
+
+    private void setColor(String s) {
+        if (Objects.equals(s, "Democratic")) { constraintLayout.setBackgroundColor(Color.BLUE); }
+        else if (Objects.equals(s, "Republican")) { constraintLayout.setBackgroundColor(Color.RED); }
     }
 
     private void mToast(String s) { Toast.makeText(this, s, Toast.LENGTH_SHORT).show(); }
