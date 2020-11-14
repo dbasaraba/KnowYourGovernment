@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -67,7 +68,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Official o1 = new Official();
         o1.setOffice("President");
         o1.setName("George Washington");
-        o1.setParty("America");
+        o1.setParty("Democratic");
+        o1.setAddressLineOne("The White House");
+        o1.setAddressLineTwo("1600 Pennsylvania Avenue NW");
+        o1.setAddressCity("Washington");
+        o1.setAddressState("DC");
+        o1.setAddressZip("20500");
+        o1.setPhone("(111) 111 1111");
+        o1.setEmail("example@example.com");
+        o1.setWebsite("www.example.com");
         officials.add(o1);
 
         Official o2 = new Official();
@@ -120,7 +129,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        mToast("short click");
+        int i = recyclerView.getChildLayoutPosition(v);
+        Official o = officials.get(i);
+        Intent intent = new Intent(this, OfficialActivity.class);
+
+        intent.putExtra("office", o.getOffice());
+        intent.putExtra("name", o.getName());
+        intent.putExtra("party", o.getParty());
+        intent.putExtra("addressLineOne", o.getAddressLineOne());
+        intent.putExtra("addressLineTwo", o.getAddressLineTwo());
+        intent.putExtra("addressCity", o.getAddressCity());
+        intent.putExtra("addressState", o.getAddressState());
+        intent.putExtra("addressZip", o.getAddressZip());
+        intent.putExtra("phone", o.getPhone());
+        intent.putExtra("email", o.getEmail());
+        intent.putExtra("website", o.getWebsite());
+
+        startActivity(intent);
     }
 
     @Override
@@ -149,7 +174,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         catch (IOException e) { mToast(e.getMessage()); }
 
-        mToast("Zip " + postalCode);
+        if (postalCode == null) { mToast("Couldn't determine location"); }
+        else { mToast("Zip " + postalCode); }
     }
 
     private void mToast(String s) { Toast.makeText(this, s, Toast.LENGTH_SHORT).show(); }
