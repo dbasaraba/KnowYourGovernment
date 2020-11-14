@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -19,7 +21,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
@@ -32,8 +36,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RecyclerView recyclerView;
 
     private static final int MY_LOCATION_REQUEST_CODE_ID = 111;
-    private double lat;
-    private double lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,10 +135,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Location currentLocation = null;
 
         if (bestProvider != null) { currentLocation = locationManager.getLastKnownLocation(bestProvider); }
-        if (currentLocation != null) {
-            lat = currentLocation.getLatitude();
-            lon = currentLocation.getLongitude();
+        if (currentLocation != null) { geoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()); }
+    }
+
+    private void geoLocation(double lat, double lon) {
+        Geocoder geocoder = new Geocoder(this);
+        String postalCode = null;
+
+        try {
+            List<Address> addresses;
+            addresses = geocoder.getFromLocation(lat, lon, 1);
+            postalCode = addresses.get(0).getPostalCode();
         }
+        catch (IOException e) { mToast(e.getMessage()); }
+
+        mToast("Zip " + postalCode);
     }
 
     private void mToast(String s) { Toast.makeText(this, s, Toast.LENGTH_SHORT).show(); }
