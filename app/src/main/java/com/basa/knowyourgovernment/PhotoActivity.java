@@ -18,6 +18,7 @@ import java.util.Objects;
 public class PhotoActivity extends AppCompatActivity {
 
     ConstraintLayout constraintLayout;
+    TextView currentLocation;
     TextView office;
     TextView name;
     ImageView avatar;
@@ -35,6 +36,7 @@ public class PhotoActivity extends AppCompatActivity {
 
     private void setUp() {
         constraintLayout = findViewById(R.id.photoConstraint);
+        currentLocation = findViewById(R.id.currentLocation);
         office = findViewById(R.id.photoOffice);
         name = findViewById(R.id.photoName);
         avatar = findViewById(R.id.photoAvatar);
@@ -42,6 +44,7 @@ public class PhotoActivity extends AppCompatActivity {
     }
 
     private void setData() {
+        currentLocation.setText(getIntent().getStringExtra("location"));
         office.setText(getIntent().getStringExtra("office"));
         name.setText(getIntent().getStringExtra("name"));
     }

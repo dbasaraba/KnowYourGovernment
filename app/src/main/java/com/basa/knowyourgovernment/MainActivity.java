@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -36,14 +37,15 @@ import java.util.List;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private TextView currentLocation;
     private LocationManager locationManager;
     private Criteria criteria;
     private final ArrayList<Official> officials = new ArrayList<>();
     private OfficialAdapter oAdapter = new OfficialAdapter(officials, this);
     private RecyclerView recyclerView;
-    private String locationZip;
+    private String location;
 
     private static final int MY_LOCATION_REQUEST_CODE_ID = 111;
 
@@ -51,36 +53,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
 
-    @Override
-    protected void onPause() {
-        officials.clear();
-        super.onPause();
+        setUp();
     }
 
     @Override
     protected void onResume() {
-        setUp();
+        clear();
         if (networkCheck()) {
-            mToast("internet working");
-            mToast("location set " + locationZip);
             setData();
+            currentLocation.setText(location);
         }
+        else { mToast("no internet"); }
         super.onResume();
     }
 
     @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String[] permissions,
-            @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == MY_LOCATION_REQUEST_CODE_ID) {
             if (permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
-                grantResults[0] == PERMISSION_GRANTED) { setLocation(); }
+                                      grantResults[0] == PERMISSION_GRANTED) {
+                setLocation();
+            }
         }
     }
 
@@ -95,7 +93,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem i) {
         switch (i.getItemId()) {
             case R.id.menu_search:
-                if (networkCheck()) { getZip(); }
+                if (networkCheck()) {
+                    getZipOrLocation();
+                }
                 break;
             case R.id.menu_about:
                 startActivity(new Intent(this, AboutActivity.class));
@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Official o = officials.get(i);
         Intent intent = new Intent(this, OfficialActivity.class);
 
+        intent.putExtra("location", location);
         intent.putExtra("office", o.getOffice());
         intent.putExtra("name", o.getName());
         intent.putExtra("party", o.getParty());
@@ -126,14 +127,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
-    @Override
-    public boolean onLongClick(View v) {
-        mToast("long click");
-
-        return true;
-    }
-
     private void setUp() {
+        currentLocation = findViewById(R.id.currentLocation);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         criteria = new Criteria();
@@ -177,20 +172,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (currentLocation != null) { geoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()); }
     }
 
-    private void getZip() {
+    private void getZipOrLocation() {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         final EditText txt = new EditText(this);
 
-        txt.setInputType(InputType.TYPE_CLASS_NUMBER);
+        txt.setInputType(InputType.TYPE_CLASS_TEXT);
         txt.setGravity(Gravity.CENTER_HORIZONTAL);
         b.setView(txt);
 
         b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) { locationZip = txt.getText().toString().toUpperCase();
+            public void onClick(DialogInterface dialog, int id) {
+                location = txt.getText().toString().toLowerCase();
+                onResume();
             }
         });
 
-        b.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+        b.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -198,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         b.setTitle("Set Location");
-        b.setMessage("Enter a zip code:");
+        b.setMessage("Enter (zip) or (city, state)");
 
         AlertDialog dialog = b.create();
         dialog.show();
@@ -245,6 +242,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         o3.setName("Tony the Tiger");
         o3.setParty("America");
         officials.add(o3);
+    }
+
+    private void clear() {
+        officials.clear();
+        oAdapter.notifyDataSetChanged();
     }
 
     private void createWarning(String title, String message) {

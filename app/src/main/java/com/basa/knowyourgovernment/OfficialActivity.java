@@ -5,7 +5,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.view.View;
@@ -18,6 +17,7 @@ import java.util.Objects;
 public class OfficialActivity extends AppCompatActivity {
 
     ConstraintLayout constraintLayout;
+    TextView currentLocation;
     TextView office;
     TextView name;
     TextView party;
@@ -44,6 +44,7 @@ public class OfficialActivity extends AppCompatActivity {
 
     private void setUp() {
         constraintLayout = findViewById(R.id.scrollableConstraint);
+        currentLocation = findViewById(R.id.currentLocation);
         office = findViewById(R.id.office);
         name = findViewById(R.id.name);
         party = findViewById(R.id.party);
@@ -75,6 +76,7 @@ public class OfficialActivity extends AppCompatActivity {
         String fullAddress = addressLineOne + '\n' + addressLineTwo + '\n' +
                city + ", " + state + ' ' + zip;
 
+        currentLocation.setText(getIntent().getStringExtra("location"));
         office.setText(getIntent().getStringExtra("office"));
         name.setText(getIntent().getStringExtra("name"));
         party.setText(partyText);
@@ -101,6 +103,7 @@ public class OfficialActivity extends AppCompatActivity {
     public void onAvatar(View v) {
         Intent intent = new Intent(this, PhotoActivity.class);
 
+        intent.putExtra("location", getIntent().getStringExtra("location"));
         intent.putExtra("office", office.getText().toString());
         intent.putExtra("name", name.getText().toString());
         intent.putExtra("party", getIntent().getStringExtra("party"));
