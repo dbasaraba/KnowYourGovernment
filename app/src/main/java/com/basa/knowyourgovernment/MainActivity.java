@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         o1.setAddressCity("Washington");
         o1.setAddressState("DC");
         o1.setAddressZip("20500");
-        o1.setPhone("(111) 111 1111");
+        o1.setPhone("(111) 111-1111");
         o1.setEmail("example@example.com");
         o1.setWebsite("www.example.com");
         officials.add(o1);
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mToast("search");
                 break;
             case R.id.menu_about:
-                mToast("about");
+                startActivity(new Intent(this, AboutActivity.class));
                 break;
         }
 

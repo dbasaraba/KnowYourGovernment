@@ -5,6 +5,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,9 +19,7 @@ public class OfficialActivity extends AppCompatActivity {
     TextView office;
     TextView name;
     TextView party;
-    TextView addressLineOne;
-    TextView addressLineTwo;
-    TextView addressLineThree;
+    TextView address;
     TextView phone;
     TextView email;
     TextView website;
@@ -35,19 +34,18 @@ public class OfficialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_official);
 
-        findAndSetValues();
+        setUp();
         setColor(getIntent().getStringExtra("party"));
         setDummyData();
+        makeLinks();
     }
 
-    private void findAndSetValues() {
-        constraintLayout = (ConstraintLayout) findViewById(R.id.scrollableConstraint);
+    private void setUp() {
+        constraintLayout = findViewById(R.id.scrollableConstraint);
         office = findViewById(R.id.office);
         name = findViewById(R.id.name);
         party = findViewById(R.id.party);
-        addressLineOne = findViewById(R.id.addressLineOne);
-        addressLineTwo = findViewById(R.id.addressLineTwo);
-        addressLineThree = findViewById(R.id.addressLineThree);
+        address = findViewById(R.id.address);
         phone = findViewById(R.id.phone);
         email = findViewById(R.id.email);
         website = findViewById(R.id.website);
@@ -58,18 +56,27 @@ public class OfficialActivity extends AppCompatActivity {
         youtube = findViewById(R.id.youtube);
     }
 
+    private void makeLinks() {
+        Linkify.addLinks(address, Linkify.ALL); address.setLinkTextColor(Color.WHITE);
+        Linkify.addLinks(phone, Linkify.ALL); phone.setLinkTextColor(Color.WHITE);
+        Linkify.addLinks(email, Linkify.ALL); email.setLinkTextColor(Color.WHITE);
+        Linkify.addLinks(website, Linkify.ALL); website.setLinkTextColor(Color.WHITE);
+    }
+
     private void setDummyData() {
-        office.setText(getIntent().getStringExtra("office"));
-        name.setText(getIntent().getStringExtra("name"));
         String partyText = '(' + getIntent().getStringExtra("party") + ')';
-        party.setText(partyText);
-        addressLineOne.setText(getIntent().getStringExtra("addressLineOne"));
-        addressLineTwo.setText(getIntent().getStringExtra("addressLineTwo"));
+        String addressLineOne = getIntent().getStringExtra("addressLineOne");
+        String addressLineTwo = getIntent().getStringExtra("addressLineTwo");
         String city = getIntent().getStringExtra("addressCity");
         String state = getIntent().getStringExtra("addressState");
         String zip = getIntent().getStringExtra("addressZip");
-        String lineThree = city + ", " + state + ' ' + zip;
-        addressLineThree.setText(lineThree);
+        String fullAddress = addressLineOne + '\n' + addressLineTwo + '\n' +
+               city + ", " + state + ' ' + zip;
+
+        office.setText(getIntent().getStringExtra("office"));
+        name.setText(getIntent().getStringExtra("name"));
+        party.setText(partyText);
+        address.setText(fullAddress);
         phone.setText(getIntent().getStringExtra("phone"));
         email.setText(getIntent().getStringExtra("email"));
         website.setText(getIntent().getStringExtra("website"));
