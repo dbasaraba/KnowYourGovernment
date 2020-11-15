@@ -3,6 +3,7 @@ package com.basa.knowyourgovernment;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.util.Linkify;
@@ -35,9 +36,9 @@ public class OfficialActivity extends AppCompatActivity {
         setContentView(R.layout.activity_official);
 
         setUp();
-        setColor(getIntent().getStringExtra("party"));
-        setDummyData();
+        setData();
         makeLinks();
+        setColor(getIntent().getStringExtra("party"));
     }
 
     private void setUp() {
@@ -63,7 +64,7 @@ public class OfficialActivity extends AppCompatActivity {
         Linkify.addLinks(website, Linkify.ALL); website.setLinkTextColor(Color.WHITE);
     }
 
-    private void setDummyData() {
+    private void setData() {
         String partyText = '(' + getIntent().getStringExtra("party") + ')';
         String addressLineOne = getIntent().getStringExtra("addressLineOne");
         String addressLineTwo = getIntent().getStringExtra("addressLineTwo");
@@ -90,9 +91,15 @@ public class OfficialActivity extends AppCompatActivity {
 
     private void mToast(String s) { Toast.makeText(this, s, Toast.LENGTH_SHORT).show(); }
 
-    public void onAvatar(View v) { mToast("avatar"); }
+    public void onAvatar(View v) {
+        Intent intent = new Intent(this, PhotoActivity.class);
 
-    public void onParty(View v) { mToast("partyLogo"); }
+        intent.putExtra("office", office.getText().toString());
+        intent.putExtra("name", name.getText().toString());
+        intent.putExtra("party", getIntent().getStringExtra("party"));
+
+        startActivity(intent);
+    }
 
     public void onFacebook(View v) { mToast("facebook"); }
 
