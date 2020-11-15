@@ -5,6 +5,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,12 +24,23 @@ public class OfficialActivity extends AppCompatActivity {
     TextView phone;
     TextView email;
     TextView website;
+    ImageView avatar;
+    ImageView partyLogo;
+    ImageView facebook;
+    ImageView twitter;
+    ImageView youtube;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_official);
 
+        findAndSetValues();
+        setColor(getIntent().getStringExtra("party"));
+        setDummyData();
+    }
+
+    private void findAndSetValues() {
         constraintLayout = (ConstraintLayout) findViewById(R.id.scrollableConstraint);
         office = findViewById(R.id.office);
         name = findViewById(R.id.name);
@@ -38,9 +51,14 @@ public class OfficialActivity extends AppCompatActivity {
         phone = findViewById(R.id.phone);
         email = findViewById(R.id.email);
         website = findViewById(R.id.website);
+        avatar = findViewById(R.id.avatar);
+        partyLogo = findViewById(R.id.partyLogo);
+        facebook = findViewById(R.id.facebook);
+        twitter = findViewById(R.id.twitter);
+        youtube = findViewById(R.id.youtube);
+    }
 
-        setColor(getIntent().getStringExtra("party"));
-
+    private void setDummyData() {
         office.setText(getIntent().getStringExtra("office"));
         name.setText(getIntent().getStringExtra("name"));
         String partyText = '(' + getIntent().getStringExtra("party") + ')';
@@ -60,8 +78,19 @@ public class OfficialActivity extends AppCompatActivity {
     private void setColor(String s) {
         if (Objects.equals(s, "Democratic")) { constraintLayout.setBackgroundColor(Color.BLUE); }
         else if (Objects.equals(s, "Republican")) { constraintLayout.setBackgroundColor(Color.RED); }
+        else { constraintLayout.setBackgroundColor(Color.BLACK); }
     }
 
     private void mToast(String s) { Toast.makeText(this, s, Toast.LENGTH_SHORT).show(); }
+
+    public void onAvatar(View v) { mToast("avatar"); }
+
+    public void onParty(View v) { mToast("partyLogo"); }
+
+    public void onFacebook(View v) { mToast("facebook"); }
+
+    public void onTwitter(View v) { mToast("twitter"); }
+
+    public void onYouTube(View v) { mToast("youtube"); }
 
 }
