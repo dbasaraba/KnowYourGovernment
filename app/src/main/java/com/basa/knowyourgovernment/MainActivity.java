@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Criteria;
@@ -20,9 +21,13 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -38,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final ArrayList<Official> officials = new ArrayList<>();
     private OfficialAdapter oAdapter = new OfficialAdapter(officials, this);
     private RecyclerView recyclerView;
+    private String locationZip;
 
     private static final int MY_LOCATION_REQUEST_CODE_ID = 111;
 
@@ -45,65 +51,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        criteria = new Criteria();
-        criteria.setPowerRequirement(Criteria.POWER_HIGH);
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(false);
-        criteria.setSpeedRequired(false);
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                    MY_LOCATION_REQUEST_CODE_ID
-            );
-        }
-        else { setLocation(); }
-
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setAdapter(oAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        Official o1 = new Official();
-        o1.setOffice("President");
-        o1.setName("George Washington");
-        o1.setParty("Republican");
-        o1.setAddressLineOne("The White House");
-        o1.setAddressLineTwo("1600 Pennsylvania Avenue NW");
-        o1.setAddressCity("Washington");
-        o1.setAddressState("DC");
-        o1.setAddressZip("20500");
-        o1.setPhone("(111) 111-1111");
-        o1.setEmail("example@example.com");
-        o1.setWebsite("www.example.com");
-        officials.add(o1);
-
-        Official o2 = new Official();
-        o2.setOffice("Vice President");
-        o2.setName("The Rock");
-        o2.setParty("America");
-        officials.add(o2);
-
-        Official o3 = new Official();
-        o3.setOffice("Speaker of the House");
-        o3.setName("Tony the Tiger");
-        o3.setParty("America");
-        officials.add(o3);
     }
 
     @Override
     protected void onPause() {
+        officials.clear();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
+        setUp();
         if (networkCheck()) {
-            mToast("internet");
+            mToast("internet working");
+            mToast("location set " + locationZip);
+            setData();
         }
         super.onResume();
     }
@@ -133,9 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem i) {
         switch (i.getItemId()) {
             case R.id.menu_search:
-                if (networkCheck()) {
-                    mToast("internet");
-                }
+                if (networkCheck()) { getZip(); }
                 break;
             case R.id.menu_about:
                 startActivity(new Intent(this, AboutActivity.class));
@@ -173,6 +133,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    private void setUp() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        criteria = new Criteria();
+        criteria.setPowerRequirement(Criteria.POWER_HIGH);
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(false);
+        criteria.setSpeedRequired(false);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                    MY_LOCATION_REQUEST_CODE_ID
+            );
+        }
+        else { setLocation(); }
+
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setAdapter(oAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private boolean networkCheck() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+        boolean connection = false;
+
+        if (info != null && info.isConnected()) { connection = true; }
+        else { createWarning("Warning", "No Internet Connection"); }
+
+        return connection;
+    }
+
     @SuppressLint("MissingPermission")
     private void setLocation() {
         String bestProvider = locationManager.getBestProvider(criteria, true);
@@ -180,6 +175,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (bestProvider != null) { currentLocation = locationManager.getLastKnownLocation(bestProvider); }
         if (currentLocation != null) { geoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()); }
+    }
+
+    private void getZip() {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        final EditText txt = new EditText(this);
+
+        txt.setInputType(InputType.TYPE_CLASS_NUMBER);
+        txt.setGravity(Gravity.CENTER_HORIZONTAL);
+        b.setView(txt);
+
+        b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) { locationZip = txt.getText().toString().toUpperCase();
+            }
+        });
+
+        b.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        b.setTitle("Set Location");
+        b.setMessage("Enter a zip code:");
+
+        AlertDialog dialog = b.create();
+        dialog.show();
     }
 
     private void geoLocation(double lat, double lon) {
@@ -197,15 +219,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else { mToast("Zip " + postalCode); }
     }
 
-    private boolean networkCheck() {
-        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = manager.getActiveNetworkInfo();
-        boolean connection = false;
+    private void setData() {
+        Official o1 = new Official();
+        o1.setOffice("President");
+        o1.setName("George Washington");
+        o1.setParty("Republican");
+        o1.setAddressLineOne("The White House");
+        o1.setAddressLineTwo("1600 Pennsylvania Avenue NW");
+        o1.setAddressCity("Washington");
+        o1.setAddressState("DC");
+        o1.setAddressZip("20500");
+        o1.setPhone("(111) 111-1111");
+        o1.setEmail("example@example.com");
+        o1.setWebsite("www.example.com");
+        officials.add(o1);
 
-        if (info != null && info.isConnected()) { connection = true; }
-        else { createWarning("Warning", "No Internet Connection"); }
+        Official o2 = new Official();
+        o2.setOffice("Vice President");
+        o2.setName("The Rock");
+        o2.setParty("America");
+        officials.add(o2);
 
-        return connection;
+        Official o3 = new Official();
+        o3.setOffice("Speaker of the House");
+        o3.setName("Tony the Tiger");
+        o3.setParty("America");
+        officials.add(o3);
     }
 
     private void createWarning(String title, String message) {
