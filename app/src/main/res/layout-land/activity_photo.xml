@@ -48,11 +48,12 @@
 
     <ImageView
         android:id="@+id/photoLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginTop="64dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/photoAvatar"
         app:layout_constraintEnd_toEndOf="@+id/photoName"
         app:layout_constraintStart_toStartOf="@+id/photoName"
-        app:layout_constraintTop_toBottomOf="@+id/photoName"
-        app:srcCompat="@drawable/brokenimage" />
+        app:layout_constraintTop_toBottomOf="@+id/photoName" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.view.View;
@@ -25,7 +26,7 @@ public class OfficialActivity extends AppCompatActivity {
     TextView email;
     TextView website;
     ImageView avatar;
-    ImageView partyLogo;
+    ImageView logo;
     ImageView facebook;
     ImageView twitter;
     ImageView youtube;
@@ -38,7 +39,7 @@ public class OfficialActivity extends AppCompatActivity {
         setUp();
         setData();
         makeLinks();
-        setColor(getIntent().getStringExtra("party"));
+        setColorAndLogo(getIntent().getStringExtra("party"));
     }
 
     private void setUp() {
@@ -51,7 +52,7 @@ public class OfficialActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         website = findViewById(R.id.website);
         avatar = findViewById(R.id.avatar);
-        partyLogo = findViewById(R.id.partyLogo);
+        logo = findViewById(R.id.partyLogo);
         facebook = findViewById(R.id.facebook);
         twitter = findViewById(R.id.twitter);
         youtube = findViewById(R.id.youtube);
@@ -83,9 +84,15 @@ public class OfficialActivity extends AppCompatActivity {
         website.setText(getIntent().getStringExtra("website"));
     }
 
-    private void setColor(String s) {
-        if (Objects.equals(s, "Democratic")) { constraintLayout.setBackgroundColor(Color.BLUE); }
-        else if (Objects.equals(s, "Republican")) { constraintLayout.setBackgroundColor(Color.RED); }
+    private void setColorAndLogo(String s) {
+        if (Objects.equals(s, "Democratic")) {
+            constraintLayout.setBackgroundColor(Color.BLUE);
+            logo.setImageResource(R.drawable.dem_logo);
+        }
+        else if (Objects.equals(s, "Republican")) {
+            constraintLayout.setBackgroundColor(Color.RED);
+            logo.setImageResource(R.drawable.rep_logo);
+        }
         else { constraintLayout.setBackgroundColor(Color.BLACK); }
     }
 

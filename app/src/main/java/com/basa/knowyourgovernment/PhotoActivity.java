@@ -3,7 +3,10 @@ package com.basa.knowyourgovernment;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,7 +30,7 @@ public class PhotoActivity extends AppCompatActivity {
 
         setUp();
         setData();
-        setColor(getIntent().getStringExtra("party"));
+        setColorAndLogo(getIntent().getStringExtra("party"));
     }
 
     private void setUp() {
@@ -43,9 +46,15 @@ public class PhotoActivity extends AppCompatActivity {
         name.setText(getIntent().getStringExtra("name"));
     }
 
-    private void setColor(String s) {
-        if (Objects.equals(s, "Democratic")) { constraintLayout.setBackgroundColor(Color.BLUE); }
-        else if (Objects.equals(s, "Republican")) { constraintLayout.setBackgroundColor(Color.RED); }
+    private void setColorAndLogo(String s) {
+        if (Objects.equals(s, "Democratic")) {
+            constraintLayout.setBackgroundColor(Color.BLUE);
+            logo.setImageResource(R.drawable.dem_logo);
+        }
+        else if (Objects.equals(s, "Republican")) {
+            constraintLayout.setBackgroundColor(Color.RED);
+            logo.setImageResource(R.drawable.rep_logo);
+        }
         else { constraintLayout.setBackgroundColor(Color.BLACK); }
     }
 

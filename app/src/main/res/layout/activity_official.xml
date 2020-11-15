@@ -112,14 +112,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="32dp"
                     android:layout_marginEnd="16dp"
                     android:textAlignment="textStart"
                     android:textColor="#FFFFFF"
                     android:textSize="19dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView4"
-                    app:layout_constraintTop_toBottomOf="@+id/partyLogo" />
+                    app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
                 <TextView
                     android:id="@+id/textView4"
@@ -204,14 +204,13 @@
 
                 <ImageView
                     android:id="@+id/partyLogo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
                     android:layout_marginTop="200dp"
                     app:layout_constraintBottom_toBottomOf="@+id/avatar"
                     app:layout_constraintEnd_toEndOf="@+id/avatar"
                     app:layout_constraintStart_toStartOf="@+id/avatar"
-                    app:layout_constraintTop_toTopOf="@+id/avatar"
-                    app:srcCompat="@drawable/brokenimage" />
+                    app:layout_constraintTop_toTopOf="@+id/avatar" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

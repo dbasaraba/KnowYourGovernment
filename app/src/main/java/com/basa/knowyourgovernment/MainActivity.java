@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Official o1 = new Official();
         o1.setOffice("President");
         o1.setName("George Washington");
-        o1.setParty("Democratic");
+        o1.setParty("Republican");
         o1.setAddressLineOne("The White House");
         o1.setAddressLineTwo("1600 Pennsylvania Avenue NW");
         o1.setAddressCity("Washington");
