@@ -1,6 +1,7 @@
 package com.basa.knowyourgovernment;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -16,6 +17,8 @@ import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -93,6 +96,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if (networkCheck()) {
+            mToast("internet");
+        }
+        super.onResume();
+    }
+
+    @Override
     public void onRequestPermissionsResult(
             int requestCode,
             @NonNull String[] permissions,
@@ -117,7 +133,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem i) {
         switch (i.getItemId()) {
             case R.id.menu_search:
-                mToast("search");
+                if (networkCheck()) {
+                    mToast("internet");
+                }
                 break;
             case R.id.menu_about:
                 startActivity(new Intent(this, AboutActivity.class));
@@ -177,6 +195,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (postalCode == null) { mToast("Couldn't determine location"); }
         else { mToast("Zip " + postalCode); }
+    }
+
+    private boolean networkCheck() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+        boolean connection = false;
+
+        if (info != null && info.isConnected()) { connection = true; }
+        else { createWarning("Warning", "No Internet Connection"); }
+
+        return connection;
+    }
+
+    private void createWarning(String title, String message) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(title);
+        b.setMessage(message);
+        AlertDialog dialog = b.create();
+        dialog.show();
     }
 
     private void mToast(String s) { Toast.makeText(this, s, Toast.LENGTH_SHORT).show(); }
