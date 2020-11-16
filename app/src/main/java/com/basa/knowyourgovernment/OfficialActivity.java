@@ -69,12 +69,10 @@ public class OfficialActivity extends AppCompatActivity {
     private void setData() {
         String partyText = '(' + getIntent().getStringExtra("party") + ')';
         String addressLineOne = getIntent().getStringExtra("addressLineOne");
-        String addressLineTwo = getIntent().getStringExtra("addressLineTwo");
         String city = getIntent().getStringExtra("addressCity");
         String state = getIntent().getStringExtra("addressState");
         String zip = getIntent().getStringExtra("addressZip");
-        String fullAddress = addressLineOne + '\n' + addressLineTwo + '\n' +
-               city + ", " + state + ' ' + zip;
+        String fullAddress = addressLineOne + '\n'  + city + ", " + state + ' ' + zip;
 
         currentLocation.setText(getIntent().getStringExtra("location"));
         office.setText(getIntent().getStringExtra("office"));

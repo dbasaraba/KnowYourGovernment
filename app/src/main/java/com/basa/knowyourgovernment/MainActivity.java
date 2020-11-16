@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -117,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("name", o.getName());
         intent.putExtra("party", o.getParty());
         intent.putExtra("addressLineOne", o.getAddressLineOne());
-        intent.putExtra("addressLineTwo", o.getAddressLineTwo());
         intent.putExtra("addressCity", o.getAddressCity());
         intent.putExtra("addressState", o.getAddressState());
         intent.putExtra("addressZip", o.getAddressZip());
@@ -230,9 +230,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
     }
 
-    public void setData(String location) {
+    public void setData(String location, ArrayList<Official> officials) {
         this.location = location;
+        this.officials.addAll(officials);
         currentLocation.setText(location);
+        oAdapter.notifyDataSetChanged();
     }
 
     public void mToast(String s) { Toast.makeText(this, s, Toast.LENGTH_SHORT).show(); }

@@ -6,13 +6,15 @@ public class Official {
     private String name;
     private String party;
     private String addressLineOne;
-    private String addressLineTwo;
     private String addressCity;
     private String addressState;
     private String addressZip;
     private String phone;
     private String email;
     private String website;
+    private String facebookId;
+    private String twitterId;
+    private String youtubeId;
 
     public String getOffice() { return this.office; }
 
@@ -29,10 +31,6 @@ public class Official {
     public String getAddressLineOne() { return this.addressLineOne; }
 
     public void setAddressLineOne(String s) { this.addressLineOne = s; }
-
-    public String getAddressLineTwo() { return this.addressLineTwo; }
-
-    public void setAddressLineTwo(String s) { this.addressLineTwo = s; }
 
     public String getAddressCity() { return this.addressCity; }
 
@@ -57,5 +55,17 @@ public class Official {
     public String getWebsite() { return this.website; }
 
     public void setWebsite(String s) { this.website = s; }
+
+    public String getFacebookId() { return this.facebookId; }
+
+    public void setFacebookId(String s) { this.facebookId = s; }
+
+    public String getTwitterId() { return this.twitterId; }
+
+    public void setTwitterId(String s) { this.twitterId = s; }
+
+    public String getYoutubeId() { return this.youtubeId; }
+
+    public void setYoutubeId(String s) { this.youtubeId = s; }
 
 }

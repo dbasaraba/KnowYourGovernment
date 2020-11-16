@@ -1,5 +1,6 @@
 package com.basa.knowyourgovernment;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,7 +10,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class GoogleCivicAPIRunnable implements Runnable {
 
@@ -64,7 +64,7 @@ public class GoogleCivicAPIRunnable implements Runnable {
         mainActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mainActivity.setData(location);
+                mainActivity.setData(location, officials);
             }
         });
     }
@@ -79,6 +79,65 @@ public class GoogleCivicAPIRunnable implements Runnable {
             String zip = normalizedInput.getString("zip");
 
             location = city + ", " + state + ' ' + zip;
+
+            JSONArray officesJSON = obj.getJSONArray("offices");
+            JSONArray officialsJSON = obj.getJSONArray("officials");
+
+            for (int i = 0; i < officesJSON.length(); i++) {
+                JSONObject office = officesJSON.getJSONObject(i);
+                JSONArray indices = office.getJSONArray("officialIndices");
+
+                for (int j = 0; j < indices.length(); j++) {
+                    Official official = new Official();
+                    JSONObject o = officialsJSON.getJSONObject(indices.getInt(j));
+
+                    official.setOffice(office.getString("name"));
+                    official.setName(o.getString("name"));
+                    official.setParty(o.getString("party"));
+
+                    if (o.has("address")) {
+                        JSONArray addresses = o.getJSONArray("address");
+                        JSONObject address = addresses.getJSONObject(0);
+                        official.setAddressLineOne(address.getString("line1"));
+                        official.setAddressCity(address.getString("city"));
+                        official.setAddressState(address.getString("state"));
+                        official.setAddressZip(address.getString("zip"));
+                    }
+                    if (o.has("phones")) {
+                        JSONArray phones = o.getJSONArray("phones");
+                        official.setPhone(phones.getString(0));
+                    }
+                    if (o.has("urls")) {
+                        JSONArray urls = o.getJSONArray("urls");
+                        official.setWebsite(urls.getString(0));
+                    }
+                    if (o.has("email")) {
+                        JSONArray emails = o.getJSONArray("emails");
+                        official.setEmail(emails.getString(0));
+                    }
+                    if (o.has("channels")) {
+                        JSONArray channels = o.getJSONArray("channels");
+
+                        for (int z = 0; z < channels.length(); z++) {
+                            JSONObject channel = channels.getJSONObject(z);
+
+                            if (channel.getString("type").equals("Facebook")) {
+                                official.setFacebookId(channel.getString("id"));
+                            }
+                            if (channel.getString("type").equals("Twitter")) {
+                                official.setTwitterId(channel.getString("id"));
+                            }
+                            if (channel.getString("type").equals("YouTube")) {
+                                official.setYoutubeId(channel.getString("id"));
+                            }
+                        }
+                    }
+
+                    this.officials.add(official);
+                }
+
+            }
+
         }
         catch (JSONException e) { e.printStackTrace(); }
     }
