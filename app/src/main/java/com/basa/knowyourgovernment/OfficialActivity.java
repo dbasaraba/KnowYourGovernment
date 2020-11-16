@@ -85,11 +85,11 @@ public class OfficialActivity extends AppCompatActivity {
     }
 
     private void setColorAndLogo(String s) {
-        if (Objects.equals(s, "Democratic")) {
+        if (Objects.equals(s, "Democratic Party")) {
             constraintLayout.setBackgroundColor(Color.BLUE);
             logo.setImageResource(R.drawable.dem_logo);
         }
-        else if (Objects.equals(s, "Republican")) {
+        else if (Objects.equals(s, "Republican Party")) {
             constraintLayout.setBackgroundColor(Color.RED);
             logo.setImageResource(R.drawable.rep_logo);
         }
