@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private OfficialAdapter oAdapter = new OfficialAdapter(officials, this);
     private RecyclerView recyclerView;
     private String location;
+    private GoogleCivicAPIRunnable googleCivicAPIRunnable = new GoogleCivicAPIRunnable(this, location);
 
     private static final int MY_LOCATION_REQUEST_CODE_ID = 111;
 
@@ -58,12 +59,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onResume() {
+    protected void onPause() {
         clear();
-        if (networkCheck()) {
-            setData();
-            currentLocation.setText(location);
-        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if (networkCheck()) { new Thread(googleCivicAPIRunnable).start(); }
         else { mToast("no internet"); }
         super.onResume();
     }
@@ -93,9 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem i) {
         switch (i.getItemId()) {
             case R.id.menu_search:
-                if (networkCheck()) {
-                    getZipOrLocation();
-                }
+                if (networkCheck()) { getZipOrLocation(); }
                 break;
             case R.id.menu_about:
                 startActivity(new Intent(this, AboutActivity.class));
@@ -182,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                location = txt.getText().toString().toLowerCase();
+//                location = txt.getText().toString().toLowerCase();
                 onResume();
             }
         });
@@ -216,34 +217,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else { mToast("Zip " + postalCode); }
     }
 
-    private void setData() {
-        Official o1 = new Official();
-        o1.setOffice("President");
-        o1.setName("George Washington");
-        o1.setParty("Republican");
-        o1.setAddressLineOne("The White House");
-        o1.setAddressLineTwo("1600 Pennsylvania Avenue NW");
-        o1.setAddressCity("Washington");
-        o1.setAddressState("DC");
-        o1.setAddressZip("20500");
-        o1.setPhone("(111) 111-1111");
-        o1.setEmail("example@example.com");
-        o1.setWebsite("www.example.com");
-        officials.add(o1);
-
-        Official o2 = new Official();
-        o2.setOffice("Vice President");
-        o2.setName("The Rock");
-        o2.setParty("America");
-        officials.add(o2);
-
-        Official o3 = new Official();
-        o3.setOffice("Speaker of the House");
-        o3.setName("Tony the Tiger");
-        o3.setParty("America");
-        officials.add(o3);
-    }
-
     private void clear() {
         officials.clear();
         oAdapter.notifyDataSetChanged();
@@ -257,6 +230,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
     }
 
-    private void mToast(String s) { Toast.makeText(this, s, Toast.LENGTH_SHORT).show(); }
+    public void setData(String location) {
+        this.location = location;
+        currentLocation.setText(location);
+    }
+
+    public void mToast(String s) { Toast.makeText(this, s, Toast.LENGTH_SHORT).show(); }
 
 }
