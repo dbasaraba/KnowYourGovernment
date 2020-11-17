@@ -127,14 +127,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:textAlignment="textStart"
                     android:textColor="#FFFFFF"
                     android:textSize="19dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView4"
-                    app:layout_constraintTop_toBottomOf="@+id/avatar" />
+                    app:layout_constraintTop_toBottomOf="@+id/partyLogo" />
 
                 <TextView
                     android:id="@+id/textView4"
@@ -179,7 +179,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:onClick="onFacebook"
-                    android:scaleType="fitCenter"
+                    android:scaleType="centerInside"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/website"
@@ -191,7 +191,7 @@
                     android:layout_height="70dp"
                     android:layout_marginStart="24dp"
                     android:onClick="onTwitter"
-                    android:scaleType="fitCenter"
+                    android:scaleType="centerInside"
                     app:layout_constraintBottom_toBottomOf="@+id/facebook"
                     app:layout_constraintStart_toEndOf="@+id/facebook"
                     app:layout_constraintTop_toTopOf="@+id/facebook"
@@ -203,7 +203,7 @@
                     android:layout_height="70dp"
                     android:layout_marginStart="24dp"
                     android:onClick="onYouTube"
-                    android:scaleType="fitCenter"
+                    android:scaleType="centerInside"
                     app:layout_constraintBottom_toBottomOf="@+id/twitter"
                     app:layout_constraintStart_toEndOf="@+id/twitter"
                     app:layout_constraintTop_toTopOf="@+id/twitter"
@@ -211,11 +211,11 @@
 
                 <ImageView
                     android:id="@+id/avatar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
                     android:layout_marginTop="16dp"
                     android:onClick="onAvatar"
-                    android:scaleType="fitCenter"
+                    android:scaleType="centerCrop"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/party"
@@ -225,16 +225,15 @@
                     android:id="@+id/partyLogo"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
-                    android:layout_marginTop="200dp"
-                    android:scaleType="fitCenter"
+                    android:scaleType="centerInside"
                     app:layout_constraintBottom_toBottomOf="@+id/avatar"
                     app:layout_constraintEnd_toEndOf="@+id/avatar"
-                    app:layout_constraintStart_toStartOf="@+id/avatar"
-                    app:layout_constraintTop_toTopOf="@+id/avatar" />
+                    app:layout_constraintStart_toStartOf="@+id/avatar" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
+
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
