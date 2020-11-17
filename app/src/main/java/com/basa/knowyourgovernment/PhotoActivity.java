@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import org.w3c.dom.Text;
 
 import java.util.Objects;
@@ -31,6 +33,7 @@ public class PhotoActivity extends AppCompatActivity {
 
         setUp();
         setData();
+        loadImage(getIntent().getStringExtra("photoURL"));
         setColorAndLogo(getIntent().getStringExtra("party"));
     }
 
@@ -43,6 +46,14 @@ public class PhotoActivity extends AppCompatActivity {
         logo = findViewById(R.id.photoLogo);
     }
 
+    private void loadImage(final String url) {
+        Picasso.get()
+                .load(url)
+                .error(R.drawable.brokenimage)
+                .placeholder(R.drawable.placeholder)
+                .into(avatar);
+    }
+
     private void setData() {
         currentLocation.setText(getIntent().getStringExtra("location"));
         office.setText(getIntent().getStringExtra("office"));
@@ -50,11 +61,11 @@ public class PhotoActivity extends AppCompatActivity {
     }
 
     private void setColorAndLogo(String s) {
-        if (Objects.equals(s, "Democratic")) {
+        if (Objects.equals(s, "Democratic Party")) {
             constraintLayout.setBackgroundColor(Color.BLUE);
             logo.setImageResource(R.drawable.dem_logo);
         }
-        else if (Objects.equals(s, "Republican")) {
+        else if (Objects.equals(s, "Republican Party")) {
             constraintLayout.setBackgroundColor(Color.RED);
             logo.setImageResource(R.drawable.rep_logo);
         }

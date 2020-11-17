@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.Objects;
 
 public class OfficialActivity extends AppCompatActivity {
@@ -39,6 +41,7 @@ public class OfficialActivity extends AppCompatActivity {
         setUp();
         setData();
         makeLinks();
+        loadImage(getIntent().getStringExtra("photoURL"));
         setColorAndLogo(getIntent().getStringExtra("party"));
     }
 
@@ -57,6 +60,14 @@ public class OfficialActivity extends AppCompatActivity {
         facebook = findViewById(R.id.facebook);
         twitter = findViewById(R.id.twitter);
         youtube = findViewById(R.id.youtube);
+    }
+
+    private void loadImage(final String url) {
+        Picasso.get()
+               .load(url)
+               .error(R.drawable.brokenimage)
+               .placeholder(R.drawable.placeholder)
+               .into(avatar);
     }
 
     private void makeLinks() {
@@ -104,6 +115,7 @@ public class OfficialActivity extends AppCompatActivity {
         intent.putExtra("location", getIntent().getStringExtra("location"));
         intent.putExtra("office", office.getText().toString());
         intent.putExtra("name", name.getText().toString());
+        intent.putExtra("photoURL", getIntent().getStringExtra("photoURL"));
         intent.putExtra("party", getIntent().getStringExtra("party"));
 
         startActivity(intent);

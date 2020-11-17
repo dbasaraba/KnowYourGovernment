@@ -4,6 +4,7 @@ public class Official {
 
     private String office;
     private String name;
+    private String photoURL;
     private String party;
     private String addressLineOne;
     private String addressCity;
@@ -23,6 +24,10 @@ public class Official {
     public String getName() { return this.name; }
 
     public void setName(String s) { this.name = s; }
+
+    public String getPhotoURL() { return this.photoURL; }
+
+    public void setPhotoURL(String s) { this.photoURL = s; }
 
     public String getParty() { return this.party; }
 

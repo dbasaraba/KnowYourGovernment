@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("location", location);
         intent.putExtra("office", o.getOffice());
         intent.putExtra("name", o.getName());
+        intent.putExtra("photoURL", o.getPhotoURL());
         intent.putExtra("party", o.getParty());
         intent.putExtra("addressLineOne", o.getAddressLineOne());
         intent.putExtra("addressCity", o.getAddressCity());

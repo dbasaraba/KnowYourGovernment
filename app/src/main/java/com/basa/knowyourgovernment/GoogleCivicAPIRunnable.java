@@ -95,6 +95,9 @@ public class GoogleCivicAPIRunnable implements Runnable {
                     official.setName(o.getString("name"));
                     official.setParty(o.getString("party"));
 
+                    if(o.has("photoUrl")) {
+                        official.setPhotoURL(o.getString("photoUrl"));
+                    }
                     if (o.has("address")) {
                         JSONArray addresses = o.getJSONArray("address");
                         JSONObject address = addresses.getJSONObject(0);
