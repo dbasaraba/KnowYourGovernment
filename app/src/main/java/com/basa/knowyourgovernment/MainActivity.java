@@ -60,12 +60,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onResume() {
-//        if (networkCheck()) { new Thread(googleCivicAPIRunnable).start(); }
-        super.onResume();
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
 
@@ -208,7 +202,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         catch (IOException e) { mToast(e.getMessage()); }
 
         if (postalCode == null) { mToast("Couldn't determine location"); }
-        else { mToast("Zip " + postalCode); }
+        else {
+            location = postalCode;
+            if (networkCheck()) { new Thread(googleCivicAPIRunnable).start(); }
+        }
     }
 
     private void createWarning(String title, String message) {
