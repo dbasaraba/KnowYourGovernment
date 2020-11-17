@@ -39,7 +39,7 @@ public class GoogleCivicAPIRunnable implements Runnable {
                 mainActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mainActivity.mToast("Download Failed");
+                        mainActivity.createWarning("Not Found", "Could not find " + mainActivity.getLocation());
                     }
                 });
 

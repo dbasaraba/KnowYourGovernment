@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void createWarning(String title, String message) {
+    public void createWarning(String title, String message) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle(title);
         b.setMessage(message);
