@@ -3,8 +3,11 @@ package com.basa.knowyourgovernment;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.view.View;
@@ -107,24 +110,68 @@ public class OfficialActivity extends AppCompatActivity {
         else { constraintLayout.setBackgroundColor(Color.BLACK); }
     }
 
-    private void mToast(String s) { Toast.makeText(this, s, Toast.LENGTH_SHORT).show(); }
+    public void mToast(String s) { Toast.makeText(this, s, Toast.LENGTH_SHORT).show(); }
 
     public void onAvatar(View v) {
-        Intent intent = new Intent(this, PhotoActivity.class);
+        if (getIntent().getStringExtra("photoURL") == null) { mToast("No picture available"); }
+        else {
+            Intent intent = new Intent(this, PhotoActivity.class);
 
-        intent.putExtra("location", getIntent().getStringExtra("location"));
-        intent.putExtra("office", office.getText().toString());
-        intent.putExtra("name", name.getText().toString());
-        intent.putExtra("photoURL", getIntent().getStringExtra("photoURL"));
-        intent.putExtra("party", getIntent().getStringExtra("party"));
+            intent.putExtra("location", getIntent().getStringExtra("location"));
+            intent.putExtra("office", office.getText().toString());
+            intent.putExtra("name", name.getText().toString());
+            intent.putExtra("photoURL", getIntent().getStringExtra("photoURL"));
+            intent.putExtra("party", getIntent().getStringExtra("party"));
 
+            startActivity(intent);
+        }
+    }
+
+    public void onFacebook(View v) {
+        String FACEBOOK_URL = "https://www.facebook.com/" + getIntent().getStringExtra("facebook");
+        String urlToUse;
+
+        PackageManager packageManager = getPackageManager();
+
+        try {
+            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
+            if (versionCode >= 3002850) { urlToUse = "fb://facewebmodal/f?href=" + FACEBOOK_URL; }
+            else { urlToUse = "fb://page/" + getIntent().getStringExtra("facebook"); }
+        }
+        catch (PackageManager.NameNotFoundException e) { urlToUse = FACEBOOK_URL; }
+
+        Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+        facebookIntent.setData(Uri.parse(urlToUse));
+        startActivity(facebookIntent);
+    }
+
+    public void onTwitter(View v) {
+        Intent intent = null;
+        String handle = getIntent().getStringExtra("twitter");
+
+        try {
+            getPackageManager().getPackageInfo("com.twitter.android", 0);
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=" + name));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        catch (Exception e) { intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/" + name)); }
         startActivity(intent);
     }
 
-    public void onFacebook(View v) { mToast("facebook"); }
 
-    public void onTwitter(View v) { mToast("twitter"); }
+    public void onYouTube(View v) {
+        String name = getIntent().getStringExtra("youtube");
+        Intent intent = null;
 
-    public void onYouTube(View v) { mToast("youtube"); }
+        try {
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.setPackage("com.google.android.youtube");
+            intent.setData(Uri.parse("https://www.youtube.com/" + name));
+            startActivity(intent);
+        }
+        catch (ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/" + name))); }
+
+    }
 
 }

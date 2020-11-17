@@ -21,7 +21,6 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.text.InputFilter;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.Menu;
@@ -33,7 +32,6 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -112,6 +110,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("phone", o.getPhone());
         intent.putExtra("email", o.getEmail());
         intent.putExtra("website", o.getWebsite());
+        intent.putExtra("facebook", o.getFacebookId());
+        intent.putExtra("twitter", o.getTwitterId());
+        intent.putExtra("youtube", o.getYoutubeId());
 
         startActivity(intent);
     }
