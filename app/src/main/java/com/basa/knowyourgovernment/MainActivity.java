@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private OfficialAdapter oAdapter = new OfficialAdapter(officials, this);
     private RecyclerView recyclerView;
     private String location;
-    private GoogleCivicAPIRunnable googleCivicAPIRunnable = new GoogleCivicAPIRunnable(this, location);
+    private GoogleCivicAPIRunnable googleCivicAPIRunnable = new GoogleCivicAPIRunnable(this);
 
     private static final int MY_LOCATION_REQUEST_CODE_ID = 111;
 
@@ -60,15 +60,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onPause() {
-        clear();
-        super.onPause();
-    }
-
-    @Override
     protected void onResume() {
-        if (networkCheck()) { new Thread(googleCivicAPIRunnable).start(); }
-        else { mToast("no internet"); }
+//        if (networkCheck()) { new Thread(googleCivicAPIRunnable).start(); }
         super.onResume();
     }
 
@@ -184,8 +177,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-//                location = txt.getText().toString().toLowerCase();
-                onResume();
+                location = txt.getText().toString().toLowerCase();
+                if (networkCheck()) { new Thread(googleCivicAPIRunnable).start(); }
             }
         });
 
@@ -218,17 +211,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else { mToast("Zip " + postalCode); }
     }
 
-    private void clear() {
-        officials.clear();
-        oAdapter.notifyDataSetChanged();
-    }
-
     private void createWarning(String title, String message) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle(title);
         b.setMessage(message);
         AlertDialog dialog = b.create();
         dialog.show();
+    }
+
+    public String getLocation() { return this.location; }
+
+    public void clear() {
+        officials.clear();
+        oAdapter.notifyDataSetChanged();
     }
 
     public void setData(String location, ArrayList<Official> officials) {

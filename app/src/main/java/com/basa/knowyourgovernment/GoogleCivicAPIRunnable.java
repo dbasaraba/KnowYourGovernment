@@ -17,17 +17,14 @@ public class GoogleCivicAPIRunnable implements Runnable {
     private ArrayList<Official> officials = new ArrayList<>();
     private String location;
 
-    GoogleCivicAPIRunnable(MainActivity mainActivity, String location) {
-        this.mainActivity = mainActivity;
-        this.location = location;
-    }
+    GoogleCivicAPIRunnable(MainActivity mainActivity) { this.mainActivity = mainActivity; }
 
     @Override
     public void run() {
         StringBuilder newUrl = new StringBuilder("https://www.googleapis.com/civicinfo/v2/representatives?key=");
         newUrl.append("AIzaSyAzRQESGzEYCwLofAKtXnsucbGAd-0C3D4");
-        newUrl.append("&address=60035");
-//        newUrl.append(location);
+        newUrl.append("&address=");
+        newUrl.append(mainActivity.getLocation());
 
         try {
             URL url = new URL(newUrl.toString());
@@ -64,9 +61,12 @@ public class GoogleCivicAPIRunnable implements Runnable {
         mainActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                mainActivity.clear();
                 mainActivity.setData(location, officials);
+                officials.clear();
             }
         });
+
     }
 
     private void parseObject(String s) {

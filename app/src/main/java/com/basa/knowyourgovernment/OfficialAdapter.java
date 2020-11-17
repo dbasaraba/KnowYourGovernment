@@ -34,7 +34,7 @@ public class OfficialAdapter extends RecyclerView.Adapter<OfficialViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull OfficialViewHolder holder, int position) {
         Official o = officials.get(position);
-        String namePlusParty = o.getName() + " (" + o.getParty() + " Party)";
+        String namePlusParty = o.getName() + " (" + o.getParty() + " )";
 
         holder.representativeOffice.setTextColor(Color.rgb(86, 39, 87));
         holder.representativeOffice.setText(o.getOffice());
